@@ -13,11 +13,11 @@ def is_junk_table(df):
     return False
 
 # Read tables
-tables = camelot.read_pdf("test1.pdf", pages='all', flavor='lattice')
+tables = camelot.read_pdf("sample-tables.pdf", pages='all', flavor='lattice')
 
 valid_count = 0
 
-with pd.ExcelWriter("output_tables_cleaned.xlsx") as writer:
+with pd.ExcelWriter("output_tables_cleaned222.xlsx") as writer:
     for i, table in enumerate(tables):
         df = table.df
         if not is_junk_table(df):
@@ -29,4 +29,4 @@ with pd.ExcelWriter("output_tables_cleaned.xlsx") as writer:
             sheet_name = f"Table_{valid_count}"
             df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-print(f"{valid_count} valid tables extracted and saved with proper column names to 'output_tables_cleaned.xlsx'")
+print(f"{valid_count} valid tables extracted and saved with proper column names to 'output_tables_cleaned222.xlsx'")

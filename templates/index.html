@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Table Graph Plot</title>
+</head>
+<body>
+  <h2>📄 Select a Table</h2>
+
+  <!-- Table selection dropdown -->
+  <form method="POST">
+    <label>Choose Table:</label>
+    <select name="table" onchange="this.form.submit()">
+      <option value="">--Select Table--</option>
+      {% for table in tables %}
+        <option value="{{ table }}" {% if table == selected_table %}selected{% endif %}>{{ table }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <!-- Show table content -->
+  {% if table_html %}
+    <h3>📝 Table Data: {{ selected_table }}</h3>
+    <div style="max-height: 300px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
+      {{ table_html | safe }}
+    </div>
+  {% endif %}
+
+  <!-- Column selection and graph type selection -->
+  {% if columns %}
+  <form method="POST">
+    <input type="hidden" name="table" value="{{ selected_table }}">
+    <h3>📊 Columns in {{ selected_table }}</h3>
+    <label>X-Axis:</label>
+    <select name="x_col">
+      {% for col in columns %}
+        <option value="{{ col }}">{{ col }}</option>
+      {% endfor %}
+    </select>
+    <label>Y-Axis:</label>
+    <select name="y_col">
+      {% for col in columns %}
+        <option value="{{ col }}">{{ col }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Graph Type:</label>
+    <select name="graph_type">
+      <option value="line">Line Graph</option>
+      <option value="bar">Bar Graph</option>
+      <option value="scatter">Scatter Plot</option>
+    </select>
+    <button type="submit">Plot</button>
+  </form>
+  {% endif %}
+
+  <!-- Show plot -->
+  {% if plot %}
+  <h3>📈 Generated Plot:</h3>
+  <img src="{{ plot }}" width="600">
+  {% endif %}
+</body>
+</html>
