@@ -6,7 +6,16 @@
 <body>
   <h2>📄 Select a Table</h2>
 
-  <!-- Table selection dropdown -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div style="background: #d4edda; color: #155724; padding: 10px; border: 1px solid #c3e6cb; margin-bottom: 10px;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
   <form method="POST">
     <label>Choose Table:</label>
     <select name="table" onchange="this.form.submit()">
@@ -17,7 +26,28 @@
     </select>
   </form>
 
-  <!-- Show table content -->
+  {% if selected_table %}
+    <form method="POST" action="/rename">
+      <input type="hidden" name="table" value="{{ selected_table }}">
+      <label>Edit Table Name:</label>
+      <input type="text" name="new_name" value="{{ renamed_table_name if renamed_table_name else selected_table }}">
+      <button type="submit">Save</button>
+    </form>
+  {% endif %}
+
+  {% if table_caption %}
+  <h3>📌 {{ table_caption }}</h3>
+{% endif %}
+
+
+
+  {% if table_info %}
+    <h4>ℹ️ Table Information:</h4>
+    <div style="background:#f8f8f8; border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+      {{ table_info }}
+    </div>
+  {% endif %}
+
   {% if table_html %}
     <h3>📝 Table Data: {{ selected_table }}</h3>
     <div style="max-height: 300px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
@@ -25,7 +55,6 @@
     </div>
   {% endif %}
 
-  <!-- Column selection and graph type selection -->
   {% if columns %}
   <form method="POST">
     <input type="hidden" name="table" value="{{ selected_table }}">
@@ -48,12 +77,12 @@
       <option value="line">Line Graph</option>
       <option value="bar">Bar Graph</option>
       <option value="scatter">Scatter Plot</option>
+      <option value="heatmap">Heatmap</option>
     </select>
     <button type="submit">Plot</button>
   </form>
   {% endif %}
 
-  <!-- Show plot -->
   {% if plot %}
   <h3>📈 Generated Plot:</h3>
   <img src="{{ plot }}" width="600">
